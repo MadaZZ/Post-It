@@ -7,12 +7,4 @@ import { Post } from './posts/posts.model';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  storedPosts: Post[] = [];
-  addPost($event) {
-    const post = {
-      title: $event.title,
-      content: $event.content
-    };
-    this.storedPosts.push(post);
-  }
 }

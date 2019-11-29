@@ -8,6 +8,8 @@ import { PostCreateComponent } from './posts/post-create/post-create.component';
 import { PostListComponent } from './posts/post-list/post-list.component';
 import { HeaderComponent } from './header/header.component';
 
+import { PostsService } from './posts/posts.service';
+
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 // Material design imports
@@ -32,7 +34,9 @@ import { MatInputModule, MatCardModule, MatButtonModule, MatToolbarModule, MatEx
     MatToolbarModule,
     MatExpansionModule
   ],
-  providers: [],
+  providers: [
+    PostsService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
