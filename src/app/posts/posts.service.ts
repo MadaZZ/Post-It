@@ -5,11 +5,11 @@ import { Post } from './posts.model';
   providedIn: 'root'
 })
 export class PostsService {
-  private posts: Post[];
+  private posts: Post[] = [];
   constructor() { }
 
   getPosts() {
-    return [...this.posts];
+    return this.posts;
   }
   addPost(titleIn: string, contentIn: string) {
     const post: Post = { title: titleIn, content: contentIn };
