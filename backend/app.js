@@ -1,14 +1,29 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
+const PostModel = require('./models/post');
+
+const mongoose = require('mongoose');
+
 const app = express();
+
+mongoose.connect("mongodb+srv://max:4iFFoB292kwe94h6@cluster0-9wlmc.mongodb.net/test?retryWrites=true&w=majority")
+.then(() => {
+    console.log('connected to DB')
+})
+.catch(() => {
+    console.log('Connection Failed');
+});
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
 app.post("/api/posts", (req, res, next) => {
-    const posts = req.body;
-    console.log(posts);
+    const post = new PostModel({
+        title: req.body.title,
+        content: req.body.content
+    });
+    console.log(post);
     res.status(201).json({
         message: 'Post Successful',
     });
