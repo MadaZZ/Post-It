@@ -3,6 +3,7 @@ import { Post } from './posts.model';
 import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
+import { post } from 'selenium-webdriver/http';
 
 @Injectable({
   providedIn: 'root'
@@ -36,8 +37,17 @@ export class PostsService {
   addPost(titleIn: string, contentIn: string) {
     const post: Post = { id: null, title: titleIn, content: contentIn };
     this.http.post<{message: string}>('http://localhost:3000/api/posts', post).subscribe((response) => {
-      console.log(response.message);
+      // console.log(response.message);
       this.posts.push(post);
+      this.postsUpdated.next([...this.posts]);
+    });
+  }
+
+  deletePost(id: string){
+    this.http.delete('http://localhost:3000/api/posts/'+id)
+    .subscribe(() => {
+      const updatedPost = this.posts.filter(post => post.id != id);
+      this.posts = updatedPost;
       this.postsUpdated.next([...this.posts]);
     });
   }
