@@ -28,7 +28,7 @@ app.use((req, res, next) => {
 app.get("/api/posts" , (req, res, next) => {
     PostModel.find()
     .then((documents) => {
-        console.log(documents);
+        // console.log(documents);
         res.status(200).json({
             message: 'fetch successful',
             posts: documents
@@ -47,5 +47,15 @@ app.post("/api/posts", (req, res, next) => {
     });
 });
 
+app.delete("/api/posts/:id", (req, res, next) => {
+    const idToDelete = req.params.id;
+    PostModel.deleteOne({_id: idToDelete})
+    .then(result => {
+        console.log("DELETE = "+JSON.stringify(result));
+    });
+    res.status(200).json({
+        message: 'Post Deleted',
+    });  
+});
 
 module.exports = app;
