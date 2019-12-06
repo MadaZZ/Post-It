@@ -21,7 +21,7 @@ export class PostsService {
           title: post.title,
           content: post.content,
           id: post._id
-        }
+        };
       });
     }))
     .subscribe((postsDataPiped) => {
@@ -37,16 +37,16 @@ export class PostsService {
   addPost(titleIn: string, contentIn: string) {
     const post: Post = { id: null, title: titleIn, content: contentIn };
     this.http.post<{message: string}>('http://localhost:3000/api/posts', post).subscribe((response) => {
-      // console.log(response.message);
+      post.id = response.postedResult._id;
       this.posts.push(post);
       this.postsUpdated.next([...this.posts]);
     });
   }
 
-  deletePost(id: string){
-    this.http.delete('http://localhost:3000/api/posts/'+id)
+  deletePost(id: string) {
+    this.http.delete('http://localhost:3000/api/posts/' + id)
     .subscribe(() => {
-      const updatedPost = this.posts.filter(post => post.id != id);
+      const updatedPost = this.posts.filter(post => post.id !== id);
       this.posts = updatedPost;
       this.postsUpdated.next([...this.posts]);
     });

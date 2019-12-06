@@ -41,9 +41,11 @@ app.post("/api/posts", (req, res, next) => {
         title: req.body.title,
         content: req.body.content
     });
-    post.save(post);
-    res.status(201).json({
-        message: 'Post Successful',
+    post.save(post).then((result) =>{
+        res.status(201).json({
+            message: 'Post Successful',
+            postedResult: result
+        });
     });
 });
 
@@ -51,7 +53,7 @@ app.delete("/api/posts/:id", (req, res, next) => {
     const idToDelete = req.params.id;
     PostModel.deleteOne({_id: idToDelete})
     .then(result => {
-        console.log("DELETE = "+JSON.stringify(result));
+        // console.log("DELETE = "+JSON.stringify(result));
     });
     res.status(200).json({
         message: 'Post Deleted',
