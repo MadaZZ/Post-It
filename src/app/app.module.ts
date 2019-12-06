@@ -15,6 +15,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 // Material design imports
 import { MatInputModule, MatCardModule, MatButtonModule, MatToolbarModule, MatExpansionModule } from '@angular/material';
+import { AppRoutingModule } from './app-routing.module';
 
 
 @NgModule({
@@ -34,7 +35,8 @@ import { MatInputModule, MatCardModule, MatButtonModule, MatToolbarModule, MatEx
     MatButtonModule,
     MatToolbarModule,
     MatExpansionModule,
-    HttpClientModule
+    HttpClientModule,
+    AppRoutingModule
   ],
   providers: [
     PostsService
