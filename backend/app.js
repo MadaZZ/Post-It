@@ -6,6 +6,7 @@ const PostModel = require('./models/post');
 const mongoose = require('mongoose');
 
 const app = express();
+const baseAddress = '/api/posts';
 
 mongoose.connect("mongodb+srv://max:4iFFoB292kwe94h6@cluster0-9wlmc.mongodb.net/Post-it?retryWrites=true&w=majority")
 .then(() => {
@@ -21,11 +22,11 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, XMLHttpRequest");
-    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS");
     next();
 });
 
-app.get("/api/posts" , (req, res, next) => {
+app.get(baseAddress , (req, res, next) => {
     PostModel.find()
     .then((documents) => {
         // console.log(documents);
@@ -36,7 +37,7 @@ app.get("/api/posts" , (req, res, next) => {
     });
 });
 
-app.post("/api/posts", (req, res, next) => {
+app.post(baseAddress, (req, res, next) => {
     const post = new PostModel({
         title: req.body.title,
         content: req.body.content
@@ -49,7 +50,21 @@ app.post("/api/posts", (req, res, next) => {
     });
 });
 
-app.delete("/api/posts/:id", (req, res, next) => {
+app.put(baseAddress+"/:id", (req, res, next) =>{
+    console.log("HELLOOOOO"+req.body.id);
+    const post = new PostModel({
+        _id: req.body.id,
+        title: req.body.title,
+        content: req.body.content
+    })
+    PostModel.updateOne({_id: req.params.id}, post).then((result) => {
+        res.status(201).json({
+            message: 'Update Successful',
+        });
+    });
+});
+
+app.delete(baseAddress+"/:id", (req, res, next) => {
     const idToDelete = req.params.id;
     PostModel.deleteOne({_id: idToDelete})
     .then(result => {
