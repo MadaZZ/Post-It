@@ -5,7 +5,7 @@
           matInput
           type="text"
           name="title"
-          [ngModel]="editPost.title"
+          [ngModel]="editPost?.title"
           required
           minlength="3"
           placeholder="Post Title"
@@ -17,7 +17,7 @@
           matInput
           rows="4"
           name="content"
-          [ngModel]="editPost.content"
+          [ngModel]="editPost?.content"
           required
           placeholder="Post Content"
           #content="ngModel"></textarea>

@@ -31,7 +31,8 @@ export class PostsService {
   }
 
   getPostById( id: string ) {
-    return { ...this.posts.find( p => p.id === id )};
+    // return { ...this.posts.find( p => p.id === id )};
+    return this.http.get<{message: string, postFound: Post}>('http://localhost:3000/api/posts/' + id);
   }
 
   getPostUpdateListener() {
@@ -55,7 +56,7 @@ export class PostsService {
       // post.id = response.postedResult._id;
       // this.posts.push(post);
       // this.postsUpdated.next([...this.posts]);
-      console.log(response);
+      // console.log(response);
     });
   }
 

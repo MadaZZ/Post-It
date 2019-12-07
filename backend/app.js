@@ -37,6 +37,15 @@ app.get(baseAddress , (req, res, next) => {
     });
 });
 
+app.get(baseAddress+"/:id" , (req, res, next) => {
+    PostModel.findById(req.params.id).then((result) => {
+        res.status(200).json({
+            message: 'Post fetch Successful',
+            postFound: result 
+        });
+    });
+});
+
 app.post(baseAddress, (req, res, next) => {
     const post = new PostModel({
         title: req.body.title,
@@ -51,7 +60,6 @@ app.post(baseAddress, (req, res, next) => {
 });
 
 app.put(baseAddress+"/:id", (req, res, next) =>{
-    console.log("HELLOOOOO"+req.body.id);
     const post = new PostModel({
         _id: req.body.id,
         title: req.body.title,

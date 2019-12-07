@@ -24,11 +24,12 @@ export class PostCreateComponent implements OnInit {
       if (paramMap.has('postId')) {
         this.mode = 'edit';
         this.postID = paramMap.get('postId');
-        this.editPost = this.postsService.getPostById(this.postID);
+        this.postsService.getPostById(this.postID).subscribe((response) => {
+          this.editPost = response.postFound;
+        });
       } else {
         this.mode = 'create';
         this.postID = null;
-        this.editPost = { id: '', title: '', content: '' };
       }
     });
   }
