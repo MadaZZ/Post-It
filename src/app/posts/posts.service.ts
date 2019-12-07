@@ -30,16 +30,32 @@ export class PostsService {
     });
   }
 
+  getPostById( id: string ) {
+    return { ...this.posts.find( p => p.id === id )};
+  }
+
   getPostUpdateListener() {
    return this.postsUpdated.asObservable();
   }
 
   addPost(titleIn: string, contentIn: string) {
     const post: Post = { id: null, title: titleIn, content: contentIn };
-    this.http.post<{message: string, postedResult: any}>('http://localhost:3000/api/posts', post).subscribe((response) => {
+    this.http.post<{message: string, postedResult: any}>('http://localhost:3000/api/posts', post)
+    .subscribe((response) => {
       post.id = response.postedResult._id;
       this.posts.push(post);
       this.postsUpdated.next([...this.posts]);
+    });
+  }
+
+  updatePost(idIn: string, titleIn: string, contentIn: string) {
+    const post: Post = { id: idIn, title: titleIn, content: contentIn };
+    this.http.put('http://localhost:3000/api/posts/' + idIn, post)
+    .subscribe((response) => {
+      // post.id = response.postedResult._id;
+      // this.posts.push(post);
+      // this.postsUpdated.next([...this.posts]);
+      console.log(response);
     });
   }
 
