@@ -1,12 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-
-const PostModel = require('./models/post');
-
 const mongoose = require('mongoose');
 
+const postsRoutes = require('./routes/posts');
+const postAddress = '/api/posts';
+
 const app = express();
-const baseAddress = '/api/posts';
 
 mongoose.connect("mongodb+srv://max:4iFFoB292kwe94h6@cluster0-9wlmc.mongodb.net/Post-it?retryWrites=true&w=majority")
 .then(() => {
@@ -26,61 +25,6 @@ app.use((req, res, next) => {
     next();
 });
 
-app.get(baseAddress , (req, res, next) => {
-    PostModel.find()
-    .then((documents) => {
-        // console.log(documents);
-        res.status(200).json({
-            message: 'fetch successful',
-            posts: documents
-        });
-    });
-});
-
-app.get(baseAddress+"/:id" , (req, res, next) => {
-    PostModel.findById(req.params.id).then((result) => {
-        res.status(200).json({
-            message: 'Post fetch Successful',
-            postFound: result 
-        });
-    });
-});
-
-app.post(baseAddress, (req, res, next) => {
-    const post = new PostModel({
-        title: req.body.title,
-        content: req.body.content
-    });
-    post.save(post).then((result) =>{
-        res.status(201).json({
-            message: 'Post Successful',
-            postedResult: result
-        });
-    });
-});
-
-app.put(baseAddress+"/:id", (req, res, next) =>{
-    const post = new PostModel({
-        _id: req.body.id,
-        title: req.body.title,
-        content: req.body.content
-    })
-    PostModel.updateOne({_id: req.params.id}, post).then((result) => {
-        res.status(201).json({
-            message: 'Update Successful',
-        });
-    });
-});
-
-app.delete(baseAddress+"/:id", (req, res, next) => {
-    const idToDelete = req.params.id;
-    PostModel.deleteOne({_id: idToDelete})
-    .then(result => {
-        // console.log("DELETE = "+JSON.stringify(result));
-    });
-    res.status(200).json({
-        message: 'Post Deleted',
-    });  
-});
+app.use("/api/posts", postsRoutes);
 
 module.exports = app;
