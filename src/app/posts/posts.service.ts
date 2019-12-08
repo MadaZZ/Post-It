@@ -4,6 +4,7 @@ import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { post } from 'selenium-webdriver/http';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,8 @@ import { post } from 'selenium-webdriver/http';
 export class PostsService {
   private posts: Post[] = [];
   private postsUpdated = new Subject<Post[]>();
-  constructor(private http: HttpClient) { }
+  
+  constructor(private http: HttpClient, private router: Router) { }
 
   getPosts() {
     this.http.get<{message: string, posts: any}>('http://localhost:3000/api/posts')
@@ -27,6 +29,7 @@ export class PostsService {
     .subscribe((postsDataPiped) => {
       this.posts = postsDataPiped;
       this.postsUpdated.next([...this.posts]);
+      this.router.navigate(["/"]);
     });
   }
 
@@ -46,6 +49,7 @@ export class PostsService {
       post.id = response.postedResult._id;
       this.posts.push(post);
       this.postsUpdated.next([...this.posts]);
+      this.router.navigate(["/"]);
     });
   }
 
