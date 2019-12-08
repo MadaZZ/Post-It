@@ -14,8 +14,8 @@ import { PostsService } from './posts/posts.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 // Material design imports
-import { MatInputModule, MatCardModule, MatButtonModule, MatToolbarModule, MatExpansionModule } from '@angular/material';
 import { AppRoutingModule } from './app-routing.module';
+import { MaterialModule } from './material.module';
 
 
 @NgModule({
@@ -30,13 +30,9 @@ import { AppRoutingModule } from './app-routing.module';
     CommonModule,
     BrowserAnimationsModule,
     FormsModule,
-    MatInputModule,
-    MatCardModule,
-    MatButtonModule,
-    MatToolbarModule,
-    MatExpansionModule,
     HttpClientModule,
-    AppRoutingModule
+    AppRoutingModule,
+    MaterialModule
   ],
   providers: [
     PostsService
