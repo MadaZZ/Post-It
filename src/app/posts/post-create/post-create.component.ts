@@ -1,6 +1,6 @@
 import { Component, OnInit, EventEmitter } from '@angular/core';
 import { Post } from '../posts.model';
-import { NgForm } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { PostsService } from '../posts.service';
 
@@ -17,10 +17,21 @@ export class PostCreateComponent implements OnInit {
   private mode = 'create';
   private postID: string;
   public isLoading = false;
+  myForm: FormGroup;
 
   constructor(private postsService: PostsService, public activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
+    this.myForm = new FormGroup({
+      'title': new FormControl(null,
+        {
+          validators: [Validators.required, Validators.minLength(3)]
+        }),
+      'content': new FormControl(null,
+        {
+          validators: [Validators.required]
+        }),
+    });
     this.activatedRoute.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has('postId')) {
         this.mode = 'edit';
@@ -29,6 +40,10 @@ export class PostCreateComponent implements OnInit {
         this.postsService.getPostById(this.postID).subscribe((response) => {
           this.isLoading = false;
           this.editPost = response.postFound;
+          this.myForm.setValue({
+            title: this.editPost.title,
+            content: this.editPost.content,
+          })
         });
       } else {
         this.mode = 'create';
@@ -37,15 +52,16 @@ export class PostCreateComponent implements OnInit {
     });
   }
 
-  onAddPost(form: NgForm) {
-    const title = form.value.title;
-    const content = form.value.content;
+
+  onAddPost( ) {
+    const title = this.myForm.value.title;
+    const content = this.myForm.value.content;
     this.isLoading = true;
     if (this.mode === 'create') {
       this.postsService.addPost(title, content);
     } else {
       this.postsService.updatePost(this.postID, title, content);
     }
-    form.resetForm();
+    this.myForm.reset();
   }
 }
