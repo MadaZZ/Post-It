@@ -57,6 +57,7 @@ export class PostsService {
     const post: Post = { id: idIn, title: titleIn, content: contentIn };
     this.http.put('http://localhost:3000/api/posts/' + idIn, post)
     .subscribe((response) => {
+      this.router.navigate(["/"]);
       // post.id = response.postedResult._id;
       // this.posts.push(post);
       // this.postsUpdated.next([...this.posts]);
