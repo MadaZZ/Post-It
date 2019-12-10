@@ -47,11 +47,12 @@ router.get("/:id" , (req, res, next) => {
 });
 
 router.post("", multer({storage: storageConfig}).single("image"), (req, res, next) => {
-    const url = req.protocol + '://' + req.get('host');
+    const path = getPath(req);
+    // const url = req.protocol + '://' + req.get('host');
     const post = new PostModel({
         title: req.body.title,
         content: req.body.content,
-        imagePath: url + "/imageUploads/" + req.file.filename,
+        imagePath: path// url + "/imageUploads/" + req.file.filename,
     });
     post.save().then((result) =>{
         res.status(201).json({
@@ -64,11 +65,16 @@ router.post("", multer({storage: storageConfig}).single("image"), (req, res, nex
     });
 });
 
-router.put("/:id", (req, res, next) =>{
+router.put("/:id", multer({storage: storageConfig}).single("image"), (req, res, next) => {
+    let imagePathFromRequest = req.body.imagePath;
+    if(req.file){
+        imagePathFromRequest = getPath(req);
+    }
     const post = new PostModel({
         _id: req.body.id,
         title: req.body.title,
-        content: req.body.content
+        content: req.body.content,
+        imagePath: imagePathFromRequest
     })
     PostModel.updateOne({_id: req.params.id}, post).then((result) => {
         res.status(201).json({
@@ -81,11 +87,17 @@ router.delete("/:id", (req, res, next) => {
     const idToDelete = req.params.id;
     PostModel.deleteOne({_id: idToDelete})
     .then(result => {
-        // console.log("DELETE = "+JSON.stringify(result));
     });
     res.status(200).json({
         message: 'Post Deleted',
     });  
 });
+
+function getPath(req){
+    let imagePath;
+    const url = req.protocol + '://' + req.get('host');
+    imagePath = url + "/imageUploads/" + req.file.filename;
+    return imagePath;
+}
 
 module.exports = router;

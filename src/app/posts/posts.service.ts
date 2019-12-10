@@ -3,7 +3,6 @@ import { Post } from './posts.model';
 import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
-import { post } from 'selenium-webdriver/http';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -58,9 +57,23 @@ export class PostsService {
     });
   }
 
-  updatePost(idIn: string, titleIn: string, contentIn: string) {
-    const post: Post = { id: idIn, title: titleIn, content: contentIn, imagePath: null };
-    this.http.put('http://localhost:3000/api/posts/' + idIn, post)
+  updatePost(idIn: string, titleIn: string, contentIn: string, imageIn: File | string) {
+    let postData: Post | FormData;
+    if (typeof imageIn === 'object') {
+      postData = new FormData();
+      postData.append("id", idIn);
+      postData.append("title", titleIn);
+      postData.append("content", contentIn);
+      postData.append("image", imageIn, titleIn);
+    } else {
+      postData = { 
+        id: idIn, 
+        title: titleIn, 
+        content: contentIn, 
+        imagePath: imageIn 
+      };
+    }
+    this.http.put('http://localhost:3000/api/posts/' + idIn, postData)
     .subscribe((response) => {
       this.router.navigate(["/"]);
       // post.id = response.postedResult._id;
