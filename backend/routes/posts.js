@@ -47,14 +47,19 @@ router.get("/:id" , (req, res, next) => {
 });
 
 router.post("", multer({storage: storageConfig}).single("image"), (req, res, next) => {
+    const url = req.protocol + '://' + req.get('host');
     const post = new PostModel({
         title: req.body.title,
-        content: req.body.content
+        content: req.body.content,
+        imagePath: url + "/image/" + req.file.filename,
     });
-    post.save(post).then((result) =>{
+    post.save().then((result) =>{
         res.status(201).json({
             message: 'Post Successful',
-            postedResult: result
+            postedResult: {
+                ...result,
+                id: result._id
+            }
         });
     });
 });
