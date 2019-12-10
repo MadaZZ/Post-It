@@ -51,7 +51,7 @@ router.post("", multer({storage: storageConfig}).single("image"), (req, res, nex
     const post = new PostModel({
         title: req.body.title,
         content: req.body.content,
-        imagePath: url + "/image/" + req.file.filename,
+        imagePath: url + "/imageUploads/" + req.file.filename,
     });
     post.save().then((result) =>{
         res.status(201).json({
