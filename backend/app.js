@@ -8,7 +8,7 @@ const postAddress = '/api/posts';
 
 const app = express();
 
-mongoose.connect("mongodb+srv://max:4iFFoB292kwe94h6@cluster0-9wlmc.mongodb.net/Post-it?retryWrites=true&w=majority")
+mongoose.connect("mongodb+srv://max:4iFFoB292kwe94h6@cluster0-9wlmc.mongodb.net/Post-it?retryWrites=true&w=majority", { useUnifiedTopology: true, useNewUrlParser: true })
 .then(() => {
     console.log('connected to DB')
 })
