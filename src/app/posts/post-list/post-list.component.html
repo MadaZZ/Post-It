@@ -15,4 +15,11 @@
         </mat-action-row>
     </mat-expansion-panel>
 </mat-accordion>
+<mat-paginator 
+  [length]="this.paginationParams.totalPosts" 
+  [pageSize]="this.paginationParams.postsPerPage"  
+  [pageSizeOptions]="this.paginationParams.postsPerPageOptions" 
+  (page)="onChangePage($event)"
+  *ngIf="posts.length > 0"> 
+</mat-paginator>
 <h3 class="mat-body-1" *ngIf="posts.length <= 0 && !isLoading">NOTHING TO SHOW!</h3>
