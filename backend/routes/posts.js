@@ -55,12 +55,11 @@ router.get("/:id" , (req, res, next) => {
 });
 
 router.post("", multer({storage: storageConfig}).single("image"), (req, res, next) => {
-    const path = getPath(req);
-    // const url = req.protocol + '://' + req.get('host');
+    const path = getPathForImageStorage(req);
     const post = new PostModel({
         title: req.body.title,
         content: req.body.content,
-        imagePath: path// url + "/imageUploads/" + req.file.filename,
+        imagePath: path
     });
     post.save().then((result) =>{
         res.status(201).json({
@@ -76,7 +75,7 @@ router.post("", multer({storage: storageConfig}).single("image"), (req, res, nex
 router.put("/:id", multer({storage: storageConfig}).single("image"), (req, res, next) => {
     let imagePathFromRequest = req.body.imagePath;
     if(req.file){
-        imagePathFromRequest = getPath(req);
+        imagePathFromRequest = getPathForImageStorage(req);
     }
     const post = new PostModel({
         _id: req.body.id,
@@ -101,7 +100,7 @@ router.delete("/:id", (req, res, next) => {
     });  
 });
 
-function getPath(req){
+function getPathForImageStorage(req){
     let imagePath;
     const url = req.protocol + '://' + req.get('host');
     imagePath = url + "/imageUploads/" + req.file.filename;
