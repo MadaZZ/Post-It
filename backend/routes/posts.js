@@ -27,9 +27,17 @@ const storageConfig = multer.diskStorage({
 })
 
 router.get("", (req, res, next) => {
-    PostModel.find()
+
+    const pageSize = +req.query.pagesize;
+    const currentPage = +req.query.page;
+    const postQuery = PostModel.find();
+    if (pageSize && currentPage) {
+        postQuery
+        .skip(pageSize * (currentPage - 1))
+        .limit(pageSize)
+    }
+    postQuery
     .then((documents) => {
-        // console.log(documents);
         res.status(200).json({
             message: 'fetch successful',
             posts: documents
