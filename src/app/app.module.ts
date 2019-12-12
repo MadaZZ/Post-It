@@ -17,6 +17,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { MaterialModule } from './material.module';
 import { LoginComponent } from './auth/login/login.component';
+import { SignupComponent } from './auth/signup/signup.component';
 
 
 @NgModule({
@@ -26,6 +27,7 @@ import { LoginComponent } from './auth/login/login.component';
     HeaderComponent,
     PostListComponent,
     LoginComponent,
+    SignupComponent
   ],
   imports: [
     BrowserModule,
