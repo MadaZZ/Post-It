@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -16,6 +16,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // Material design imports
 import { AppRoutingModule } from './app-routing.module';
 import { MaterialModule } from './material.module';
+import { LoginComponent } from './auth/login/login.component';
 
 
 @NgModule({
@@ -23,13 +24,15 @@ import { MaterialModule } from './material.module';
     AppComponent,
     PostCreateComponent,
     HeaderComponent,
-    PostListComponent
+    PostListComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,
     CommonModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
+    FormsModule,
     HttpClientModule,
     AppRoutingModule,
     MaterialModule
