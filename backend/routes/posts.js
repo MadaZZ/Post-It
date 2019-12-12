@@ -41,7 +41,7 @@ router.get("", (req, res, next) => {
     postQuery
     .then((documents) => {
         fetchedPostes = documents;
-        return PostModel.count();
+        return PostModel.countDocuments();
     }).then( count => {
         res.status(200).json({
             message: 'fetch successful',
