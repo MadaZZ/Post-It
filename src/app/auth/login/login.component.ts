@@ -19,7 +19,6 @@ export class LoginComponent implements OnInit {
       email: form.value.email,
       password: form.value.password
     };
-    debugger;
   }
 
 }

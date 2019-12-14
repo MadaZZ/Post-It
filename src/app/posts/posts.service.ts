@@ -48,14 +48,14 @@ export class PostsService {
   }
 
   addPost(titleIn: string, contentIn: string, imageIn: File) {
-    var postData = new FormData();
-    postData.append("title", titleIn);
-    postData.append("content", contentIn);
-    postData.append("image", imageIn, titleIn);
+    const postData = new FormData();
+    postData.append('title', titleIn);
+    postData.append('content', contentIn);
+    postData.append('image', imageIn, titleIn);
     this.http
       .post<{ message: string, postedResult: Post }>('http://localhost:3000/api/posts', postData)
       .subscribe((response) => {
-        this.router.navigate(["/"]);
+        this.router.navigate(['/']);
     });
   }
 
@@ -63,21 +63,21 @@ export class PostsService {
     let postData: Post | FormData;
     if (typeof imageIn === 'object') {
       postData = new FormData();
-      postData.append("id", idIn);
-      postData.append("title", titleIn);
-      postData.append("content", contentIn);
-      postData.append("image", imageIn, titleIn);
+      postData.append('id', idIn);
+      postData.append('title', titleIn);
+      postData.append('content', contentIn);
+      postData.append('image', imageIn, titleIn);
     } else {
-      postData = { 
-        id: idIn, 
-        title: titleIn, 
-        content: contentIn, 
-        imagePath: imageIn 
+      postData = {
+        id: idIn,
+        title: titleIn,
+        content: contentIn,
+        imagePath: imageIn
       };
     }
     this.http.put('http://localhost:3000/api/posts/' + idIn, postData)
     .subscribe((response) => {
-      this.router.navigate(["/"]);
+      this.router.navigate(['/']);
     });
   }
 
