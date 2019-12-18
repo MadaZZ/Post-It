@@ -4,8 +4,10 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 const postsRoutes = require('./routes/posts');
-const postAddress = '/api/posts';
+const userRoutes = require('./routes/user');
 
+const postAddress = '/api/posts';
+const userAddress = '/api/user';
 const app = express();
 
 mongoose.connect("mongodb+srv://max:4iFFoB292kwe94h6@cluster0-9wlmc.mongodb.net/Post-it?retryWrites=true&w=majority", { useUnifiedTopology: true, useNewUrlParser: true })
@@ -27,6 +29,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use("/api/posts", postsRoutes);
+app.use(postAddress, postsRoutes);
+app.use(userAddress, userRoutes);
 
 module.exports = app;
