@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { TouchSequence } from 'selenium-webdriver';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-login',
@@ -10,15 +10,12 @@ import { TouchSequence } from 'selenium-webdriver';
 export class LoginComponent implements OnInit {
 
   isLoading = false;
-  constructor() { }
+  constructor( private authService: AuthService ) { }
 
   ngOnInit() {
   }
-  onLogin(form: NgForm){
-    const creds = {
-      email: form.value.email,
-      password: form.value.password
-    };
+  onLogin(form: NgForm) {
+    this.authService.login(form.value.email, form.value.password);
   }
 
 }
