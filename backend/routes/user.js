@@ -1,13 +1,13 @@
 const express = require('express');
 
 const bcrypt = require('bcrypt');
-
+const userModel = require('../models/user');
 const router = express.Router();
 
 router.post("/signup", (req, res, next) => {
     bcrypt.hash(req.body.password, 10)
     .then((hash) => {
-        const user = new  user({
+        const user = new  userModel({
             email: req.body.email,
             password: hash
         });
@@ -25,6 +25,8 @@ router.post("/signup", (req, res, next) => {
             });
         });
     
+    }).catch( err => {
+        console.log(err);
     });
 
 });
