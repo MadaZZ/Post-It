@@ -2,6 +2,8 @@ const express = require('express');
 const multer = require('multer');
 const router = express.Router();
 
+const authCheck = require('../middleware/auth-check');
+
 const PostModel = require('../models/post');
 
 MIME_TYPE_MAP = {
@@ -60,7 +62,7 @@ router.get("/:id" , (req, res, next) => {
     });
 });
 
-router.post("", multer({storage: storageConfig}).single("image"), (req, res, next) => {
+router.post("", authCheck, multer({storage: storageConfig}).single("image"), (req, res, next) => {
     const path = getPathForImageStorage(req);
     const post = new PostModel({
         title: req.body.title,
@@ -78,7 +80,7 @@ router.post("", multer({storage: storageConfig}).single("image"), (req, res, nex
     });
 });
 
-router.put("/:id", multer({storage: storageConfig}).single("image"), (req, res, next) => {
+router.put("/:id", authCheck, multer({storage: storageConfig}).single("image"), (req, res, next) => {
     let imagePathFromRequest = req.body.imagePath;
     if(req.file){
         imagePathFromRequest = getPathForImageStorage(req);
@@ -96,7 +98,7 @@ router.put("/:id", multer({storage: storageConfig}).single("image"), (req, res, 
     });
 });
 
-router.delete("/:id", (req, res, next) => {
+router.delete("/:id", authCheck, (req, res, next) => {
     const idToDelete = req.params.id;
     PostModel.deleteOne({_id: idToDelete})
     .then(result => {
