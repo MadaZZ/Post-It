@@ -5,6 +5,7 @@ import { PageEvent } from '@angular/material';
 
 import { Post } from '../posts.model';
 import { PostsService } from '../posts.service';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-post-list',
@@ -14,14 +15,18 @@ import { PostsService } from '../posts.service';
 export class PostListComponent implements OnInit, OnDestroy {
   public posts: Post[] = [];
   private postSubs: Subscription;
+  private authStatusSub: Subscription;
+  private isAuthenticated = false;
   public isLoading = false;
   public paginationParams = {
     totalPosts: 0,
     postsPerPage: 2,
     currentPage: 1,
     postsPerPageOptions: [1, 2, 5, 10],
-  }
-  constructor( private postsService: PostsService, private router: Router ) { }
+  };
+  private router: Router;
+
+  constructor( private postsService: PostsService, private authService: AuthService) { }
 
   ngOnInit() {
     this.isLoading = true;
@@ -31,13 +36,18 @@ export class PostListComponent implements OnInit, OnDestroy {
       this.posts = postsData.posts;
       this.paginationParams.totalPosts = postsData.postCount;
     });
+    this.isAuthenticated = this.authService.getIsAuthenticated();
+    this.authStatusSub = this.authService.getAuthStatusListner().subscribe( (result) => {
+      this.isAuthenticated = result;
+    });
   }
   ngOnDestroy(): void {
     this.postSubs.unsubscribe();
+    this.authStatusSub.unsubscribe();
   }
   onDelete(id: string) {
     this.isLoading = true;
-    this.postsService.deletePost(id).subscribe(()=> {
+    this.postsService.deletePost(id).subscribe(() => {
       this.postsService.getPosts(this.paginationParams.postsPerPage, this.paginationParams.currentPage);
     });
   }
