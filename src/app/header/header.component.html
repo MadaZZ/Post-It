@@ -2,8 +2,9 @@
     <span> <a routerLink="/"> POSTiT </a> </span>
     <span class="space"></span>
     <ul>
-        <li> <a mat-button routerLink="/create" routerLinkActive="mat-accent">Create</a> </li>
-        <li> <a mat-button routerLink="/login" routerLinkActive="mat-accent">Login</a> </li>
-        <li> <a mat-button routerLink="/signup" routerLinkActive="mat-accent">SignUp</a> </li>
+        <li *ngIf="isAuthenticated"> <a mat-button routerLink="/create" routerLinkActive="mat-accent">New Post</a> </li>
+        <li *ngIf="!isAuthenticated"> <a mat-button routerLink="/login" routerLinkActive="mat-accent">Login</a> </li>
+        <li *ngIf="!isAuthenticated"> <a mat-button routerLink="/signup" routerLinkActive="mat-accent">SignUp</a> </li>
+        <li *ngIf="isAuthenticated"> <button mat-button> Logout </button> </li>
     </ul>
 </mat-toolbar>
