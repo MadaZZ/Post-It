@@ -36,12 +36,15 @@ export class AuthService {
       .post<{ token: string, expiresIn: number }>('http://localhost:3000/api/user/login', creds)
       .subscribe((response) => {
         this.token = response.token;
+        const expTimeLimit = response.expiresIn;
         if (this.token) {
-          this.loginSessionTimer = setTimeout(() => {
-            this.logout();
-          } , response.expiresIn * 1000);
           this.isAuthenticated = true;
           this.authStatusListener.next(true);
+
+          const now = new Date();
+          const expirationDate = new Date(now.getTime() + expTimeLimit * 1000);
+          this.saveAuthData(this.token, expirationDate);
+          this.setAuthTimer(expTimeLimit * 1000);
           this.router.navigate(['/']);
         }
       });
@@ -65,6 +68,50 @@ export class AuthService {
     this.authStatusListener.next(false);
     this.router.navigate(['/login']);
     clearTimeout(this.loginSessionTimer);
+    this.clearAuthData();
+  }
+
+  autoAuthUser() {
+    const authInfo = this.getAuthData();
+    if (!authInfo) {
+      return;
+    }
+    const now = new Date();
+    const expiresIn = authInfo.expirationDate.getTime() - now.getTime();
+    if (expiresIn > 0) {
+      this.token = authInfo.token;
+      this.isAuthenticated = true;
+      this.setAuthTimer(expiresIn);
+      this.authStatusListener.next(true);
+    }
+  }
+
+  private saveAuthData(tokenIn: string, expTimeStamp: Date) {
+    localStorage.setItem('token', tokenIn);
+    localStorage.setItem('expiration', expTimeStamp.toISOString());
+  }
+
+  private clearAuthData() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('expiration');
+  }
+
+  private getAuthData() {
+    const tokenOut = localStorage.getItem('token');
+    const expDate = localStorage.getItem('expiration');
+    if (!tokenOut || !expDate) {
+      return;
+    }
+    return {
+      token: tokenOut,
+      expirationDate: new Date(expDate)
+    };
+  }
+
+  private setAuthTimer( duration: number) {
+      this.loginSessionTimer = setTimeout(() => {
+          this.logout();
+      }, duration);
   }
 
 }
