@@ -24,9 +24,8 @@ export class PostListComponent implements OnInit, OnDestroy {
     currentPage: 1,
     postsPerPageOptions: [1, 2, 5, 10],
   };
-  private router: Router;
 
-  constructor( private postsService: PostsService, private authService: AuthService) { }
+  constructor( private postsService: PostsService, private authService: AuthService, private router: Router) { }
 
   ngOnInit() {
     this.isLoading = true;
