@@ -92,21 +92,34 @@ router.put("/:id", authCheck, multer({storage: storageConfig}).single("image"), 
         content: req.body.content,
         imagePath: imagePathFromRequest
     })
-    PostModel.updateOne({_id: req.params.id}, post).then((result) => {
-        res.status(201).json({
-            message: 'Update Successful',
-        });
+    PostModel.updateOne({_id: req.params.id, creator: req.userData.userID}, post).then((result) => {
+        if(result.nModified){
+            res.status(201).json({
+                message: 'Update Successful',
+            });
+        } else {
+            res.status(401).json({
+                message: 'Unauthorized to Edit',
+            });
+        }
     });
 });
 
 router.delete("/:id", authCheck, (req, res, next) => {
     const idToDelete = req.params.id;
-    PostModel.deleteOne({_id: idToDelete})
+    PostModel.deleteOne({_id: idToDelete, creator: req.userData.userID})
     .then(result => {
+        console.log(result);
+        if(result.deletedCount > 0){
+            res.status(200).json({
+                message: 'Post Deleted',
+            });
+        } else {
+            res.status(401).json({
+                message: 'Unauthorized to Delete',
+            });
+        }
     });
-    res.status(200).json({
-        message: 'Post Deleted',
-    });  
 });
 
 function getPathForImageStorage(req){
