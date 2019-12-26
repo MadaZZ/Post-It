@@ -11,13 +11,13 @@ import { Router } from '@angular/router';
 export class PostsService {
   private posts: Post[] = [];
   private postsUpdated = new Subject<{posts: Post[], postCount: number}>();
-  
+
   constructor(private http: HttpClient, private router: Router) { }
 
   getPosts(postsPerPage: number, currentPage: number) {
     const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`;
-    
-    this.http.get<{message: string, posts: any, maxPosts: number}>('http://localhost:3000/api/posts'+queryParams)
+
+    this.http.get<{message: string, posts: any, maxPosts: number}>('http://localhost:3000/api/posts' + queryParams)
     .pipe(
       map((postData) => {
       return {
@@ -27,6 +27,7 @@ export class PostsService {
           content: post.content,
           id: post._id,
           imagePath: post.imagePath,
+          creator: post.creator
         };
       }), maxPosts: postData.maxPosts
     };
@@ -34,7 +35,7 @@ export class PostsService {
     .subscribe((postsDataPiped) => {
       this.posts = postsDataPiped.posts;
       this.postsUpdated.next({posts: [...this.posts], postCount: postsDataPiped.maxPosts});
-      this.router.navigate(["/"]);
+      this.router.navigate(['/']);
     });
   }
 

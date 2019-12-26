@@ -67,7 +67,8 @@ router.post("", authCheck, multer({storage: storageConfig}).single("image"), (re
     const post = new PostModel({
         title: req.body.title,
         content: req.body.content,
-        imagePath: path
+        imagePath: path,
+        creator: req.userData.userID
     });
     post.save().then((result) =>{
         res.status(201).json({
