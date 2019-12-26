@@ -24,6 +24,7 @@ export class PostListComponent implements OnInit, OnDestroy {
     currentPage: 1,
     postsPerPageOptions: [1, 2, 5, 10],
   };
+  private userId: string;
 
   constructor( private postsService: PostsService, private authService: AuthService, private router: Router) { }
 
@@ -36,8 +37,10 @@ export class PostListComponent implements OnInit, OnDestroy {
       this.paginationParams.totalPosts = postsData.postCount;
     });
     this.isAuthenticated = this.authService.getIsAuthenticated();
+    this.userId = this.authService.getUserId();
     this.authStatusSub = this.authService.getAuthStatusListner().subscribe( (result) => {
       this.isAuthenticated = result;
+      this.userId = this.authService.getUserId();
     });
   }
   ngOnDestroy(): void {
