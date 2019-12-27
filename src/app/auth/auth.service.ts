@@ -24,7 +24,9 @@ export class AuthService {
     this.http
       .post<{ message: string }>('http://localhost:3000/api/user/signup', creds)
       .subscribe((response) => {
-        console.log(response);
+        this.router.navigate(['/']);
+      }, error => {
+        this.authStatusListener.next(false);
       });
   }
 
@@ -49,6 +51,8 @@ export class AuthService {
           this.setAuthTimer(expTimeLimit * 1000);
           this.router.navigate(['/']);
         }
+      }, error => {
+        this.authStatusListener.next(false);
       });
   }
 
