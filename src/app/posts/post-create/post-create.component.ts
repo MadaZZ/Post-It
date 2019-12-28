@@ -1,16 +1,18 @@
-import { Component, OnInit, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Post } from '../posts.model';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { PostsService } from '../posts.service';
 import { mimeType } from './mime-type.validator';
+import { Subscription } from 'rxjs';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-post-create',
   templateUrl: './post-create.component.html',
   styleUrls: ['./post-create.component.css']
 })
-export class PostCreateComponent implements OnInit {
+export class PostCreateComponent implements OnInit, OnDestroy {
 
   enteredContent = '';
   enteredTitle = '';
@@ -20,9 +22,13 @@ export class PostCreateComponent implements OnInit {
   public isLoading = false;
   public imgPreview: any;
   myForm: FormGroup;
-  
+  private authSubs: Subscription;
 
-  constructor(private postsService: PostsService, public activatedRoute: ActivatedRoute) { }
+  constructor(
+    private postsService: PostsService,
+    public activatedRoute: ActivatedRoute,
+    private authService: AuthService
+  ) { }
 
   ngOnInit() {
     this.myForm = new FormGroup({
@@ -40,6 +46,9 @@ export class PostCreateComponent implements OnInit {
           asyncValidators: [mimeType]
         }),
     });
+    this.authSubs = this.authService.getAuthStatusListner().subscribe( result => {
+      this.isLoading = false;
+    });
     this.activatedRoute.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has('postId')) {
         this.mode = 'edit';
@@ -52,7 +61,7 @@ export class PostCreateComponent implements OnInit {
             title: this.editPost.title,
             content: this.editPost.content,
             image: this.editPost.imagePath
-          })
+          });
         });
       } else {
         this.mode = 'create';
@@ -83,5 +92,9 @@ export class PostCreateComponent implements OnInit {
       this.postsService.updatePost(this.postID, title, content, image);
     }
     this.myForm.reset();
+  }
+
+  ngOnDestroy() {
+    this.authSubs.unsubscribe();
   }
 }
