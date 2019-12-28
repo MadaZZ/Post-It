@@ -17,18 +17,20 @@ router.post("/signup", (req, res, next) => {
         user.save()
         .then( (result) => {
             res.status(201).json({
-                message: 'User Created',
+                message: 'User Created.',
                 result: result
             });
         })
         .catch(err => {
             res.status(500).json({
-                error: err
+                message: 'Email already in use.'
             });
         });
     
     }).catch( err => {
-        console.log(err);
+        res.status(500).json({
+            message: 'Unable to signup.'
+        });
     });
 
 });
@@ -39,7 +41,7 @@ router.post("/login", (req, res, next) => {
     .then( user => {
         if(!user){
             return res.status(401).json({
-                message: 'Auth failed'
+                message: 'Invalid auth credentials.'
             });
         }
         fetchedUser = user;
@@ -48,7 +50,7 @@ router.post("/login", (req, res, next) => {
     .then(result => {
         if(!result){
             return res.status(401).json({
-                message: 'Auth failed'
+                message: 'Auth failed.'
             });
         }
 
@@ -61,11 +63,10 @@ router.post("/login", (req, res, next) => {
             token: token,
             expiresIn: 3600,
             userID: fetchedUser._id
-        })
-    }) 
-    .catch(err => {
-        return res.status(401).json({
-            message: 'Auth failed'
+        });
+    }).catch(err => {
+        res.status(401).json({
+            message: 'Invalid auth credentials.'
         });
     });
 });

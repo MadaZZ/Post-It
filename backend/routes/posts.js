@@ -46,18 +46,32 @@ router.get("", (req, res, next) => {
         return PostModel.countDocuments();
     }).then( count => {
         res.status(200).json({
-            message: 'fetch successful',
+            message: 'fetch successful.',
             posts: fetchedPostes,
             maxPosts: count
+        });
+    }).catch(err => {
+        res.status(500).json({
+            message: 'Failed to fetch posts.'
         });
     });
 });
 
 router.get("/:id" , (req, res, next) => {
     PostModel.findById(req.params.id).then((result) => {
-        res.status(200).json({
-            message: 'Post fetch Successful',
-            postFound: result 
+        if(result){
+            res.status(200).json({
+                message: 'Post fetch Successful.',
+                postFound: result 
+            });   
+        } else {
+            res.status(404).json({
+                message: 'Post not found.',
+            });
+        }
+    }).catch(err => {
+        res.status(500).json({
+            message: 'Failed to fetch post.'
         });
     });
 });
@@ -72,11 +86,15 @@ router.post("", authCheck, multer({storage: storageConfig}).single("image"), (re
     });
     post.save().then((result) =>{
         res.status(201).json({
-            message: 'Post Successful',
+            message: 'Post created Successfully.',
             postedResult: {
                 ...result,
                 id: result._id
             }
+        });
+    }).catch(err => {
+        res.status(500).json({
+            message: 'Failed to create post.'
         });
     });
 });
@@ -95,14 +113,18 @@ router.put("/:id", authCheck, multer({storage: storageConfig}).single("image"), 
     PostModel.updateOne({_id: req.params.id, creator: req.userData.userID}, post).then((result) => {
         if(result.nModified){
             res.status(201).json({
-                message: 'Update Successful',
+                message: 'Update Successful.',
             });
         } else {
             res.status(401).json({
-                message: 'Unauthorized to Edit',
+                message: 'Unauthorized to Edit.',
             });
         }
-    });
+    }).catch(err => {
+        res.status(500).json({
+            message: 'Failed to update post.'
+        });
+    });;
 });
 
 router.delete("/:id", authCheck, (req, res, next) => {
@@ -112,13 +134,17 @@ router.delete("/:id", authCheck, (req, res, next) => {
         console.log(result);
         if(result.deletedCount > 0){
             res.status(200).json({
-                message: 'Post Deleted',
+                message: 'Post Deleted.',
             });
         } else {
             res.status(401).json({
-                message: 'Unauthorized to Delete',
+                message: 'Unauthorized to Delete.',
             });
         }
+    }).catch(err => {
+        res.status(500).json({
+            message: 'Failed to delete post.'
+        });
     });
 });
 
