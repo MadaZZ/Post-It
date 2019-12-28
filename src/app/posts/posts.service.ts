@@ -1,9 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Post } from './posts.model';
 import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
+
+import { Post } from './posts.model';
+import { environment } from '../../environments/environment';
+
+const BACKEND_URL = environment.apiURL + '/posts/';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +21,7 @@ export class PostsService {
   getPosts(postsPerPage: number, currentPage: number) {
     const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`;
 
-    this.http.get<{message: string, posts: any, maxPosts: number}>('http://localhost:3000/api/posts' + queryParams)
+    this.http.get<{message: string, posts: any, maxPosts: number}>(BACKEND_URL + queryParams)
     .pipe(
       map((postData) => {
       return {
@@ -41,7 +45,7 @@ export class PostsService {
 
   getPostById( id: string ) {
     // return { ...this.posts.find( p => p.id === id )};
-    return this.http.get<{message: string, postFound: Post}>('http://localhost:3000/api/posts/' + id);
+    return this.http.get<{message: string, postFound: Post}>(BACKEND_URL + id);
   }
 
   getPostUpdateListener() {
@@ -54,7 +58,7 @@ export class PostsService {
     postData.append('content', contentIn);
     postData.append('image', imageIn, titleIn);
     this.http
-      .post<{ message: string, postedResult: Post }>('http://localhost:3000/api/posts', postData)
+      .post<{ message: string, postedResult: Post }>(BACKEND_URL, postData)
       .subscribe((response) => {
         this.router.navigate(['/']);
     });
@@ -76,14 +80,14 @@ export class PostsService {
         imagePath: imageIn
       };
     }
-    this.http.put('http://localhost:3000/api/posts/' + idIn, postData)
+    this.http.put(BACKEND_URL + idIn, postData)
     .subscribe((response) => {
       this.router.navigate(['/']);
     });
   }
 
   deletePost(id: string) {
-    return this.http.delete('http://localhost:3000/api/posts/' + id);
+    return this.http.delete(BACKEND_URL + id);
     // .subscribe(() => {
     //   const updatedPost = this.posts.filter(post => post.id !== id);
     //   this.posts = updatedPost;

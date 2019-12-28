@@ -4,6 +4,10 @@ import { AuthData } from './auth-data.model';
 import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
 
+import { environment } from '../../environments/environment';
+
+const BACKEND_URL = environment.apiURL + '/user/';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -22,7 +26,7 @@ export class AuthService {
       password: passwordIn
     };
     this.http
-      .post<{ message: string }>('http://localhost:3000/api/user/signup', creds)
+      .post<{ message: string }>( BACKEND_URL + 'signup', creds)
       .subscribe((response) => {
         this.router.navigate(['/']);
       }, error => {
@@ -36,7 +40,7 @@ export class AuthService {
       password: passwordIn
     };
     this.http
-      .post<{ token: string, expiresIn: number, userID: string }>('http://localhost:3000/api/user/login', creds)
+      .post<{ token: string, expiresIn: number, userID: string }>(BACKEND_URL + 'login', creds)
       .subscribe((response) => {
         this.token = response.token;
         const expTimeLimit = response.expiresIn;
@@ -77,7 +81,7 @@ export class AuthService {
     this.isAuthenticated = false;
     this.userId = null;
     this.authStatusListener.next(false);
-    this.router.navigate(['/login']);
+    this.router.navigate(['/auth/login']);
     clearTimeout(this.loginSessionTimer);
     this.clearAuthData();
   }
