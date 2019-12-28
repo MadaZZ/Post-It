@@ -83,7 +83,7 @@ exports.editPost = (req, res, next) => {
         imagePath: imagePathFromRequest
     })
     PostModel.updateOne({_id: req.params.id, creator: req.userData.userID}, post).then((result) => {
-        if(result.nModified){
+        if(result.n){
             res.status(201).json({
                 message: 'Update Successful.',
             });
