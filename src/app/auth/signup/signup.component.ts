@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./signup.component.css']
 })
 export class SignupComponent implements OnInit, OnDestroy {
-  private isLoading = false;
+  isLoading = false;
   private authSub: Subscription;
   constructor(private authService: AuthService) { }
 

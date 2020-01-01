@@ -16,7 +16,7 @@ export class PostListComponent implements OnInit, OnDestroy {
   public posts: Post[] = [];
   private postSubs: Subscription;
   private authStatusSub: Subscription;
-  private isAuthenticated = false;
+  public isAuthenticated = false;
   public isLoading = false;
   public paginationParams = {
     totalPosts: 0,
@@ -24,7 +24,7 @@ export class PostListComponent implements OnInit, OnDestroy {
     currentPage: 1,
     postsPerPageOptions: [1, 2, 5, 10],
   };
-  private userId: string;
+  public userId: string;
 
   constructor( private postsService: PostsService, private authService: AuthService, private router: Router) { }
 
